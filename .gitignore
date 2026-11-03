@@ -1,0 +1,44 @@
+# Environment variables and secrets
+.env
+*.env
+.env.local
+.env.*.local
+backend/.env
+
+# Node.js & Frontend build
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+frontend/.vite/
+
+# Python & Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+env/
+ENV/
+
+# Database & SQLite
+*.db
+*.sqlite
+*.sqlite3
+backend/upsc_mentor.db
+backend/*.db
+
+# Uploads & Temp files
+uploads/
+backend/uploads/
+backend/error.txt
+*.log
+
+# OS & Editor specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
