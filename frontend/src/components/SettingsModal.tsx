@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, Activity, Cpu, Globe, Trash2, ShieldCheck } from 'lucide-react';
+import { API_BASE } from '../services/api';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const checkHealth = async () => {
       const start = performance.now();
       try {
-        const res = await fetch('/api/health');
+        const res = await fetch(`${API_BASE}/health`);
         const data = await res.json();
         const duration = Math.round(performance.now() - start);
         setHealthData(data);

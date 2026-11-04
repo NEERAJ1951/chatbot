@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE } from '../services/api';
 import {
   MessageSquare,
   BookOpen,
@@ -45,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
     const checkHealth = async () => {
       try {
-        const res = await fetch('/api/health');
+        const res = await fetch(`${API_BASE}/health`);
         if (res.ok) {
           const data = await res.json();
           if (mounted) {

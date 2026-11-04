@@ -4,7 +4,10 @@ import {
   MCQQuestion, StudyPlan, Citation
 } from '../types';
 
-const API_BASE = '/api';
+// Configurable API base: supports production external backend via VITE_API_URL or local proxy via /api
+export const API_BASE = import.meta.env.VITE_API_URL
+  ? `${String(import.meta.env.VITE_API_URL).replace(/\/$/, '')}/api`
+  : '/api';
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('upsc_auth_token');

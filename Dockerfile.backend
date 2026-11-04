@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/app /app/app
 COPY backend/run.py /app/run.py
 
-EXPOSE 8000
+ENV PORT=5000
+EXPOSE 5000
 
 CMD ["python", "run.py"]
