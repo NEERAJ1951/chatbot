@@ -4,9 +4,10 @@ import {
   MCQQuestion, StudyPlan, Citation
 } from '../types';
 
-// Configurable API base: supports production external backend via VITE_API_URL or local proxy via /api
-export const API_BASE = import.meta.env.VITE_API_URL
-  ? `${String(import.meta.env.VITE_API_URL).replace(/\/$/, '')}/api`
+// Configurable API base: supports production external backend via VITE_API_URL or VITE_BACKEND_URL, or local proxy via /api
+const rawApiUrl = (import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '').trim().replace(/\/$/, '');
+export const API_BASE = rawApiUrl
+  ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`)
   : '/api';
 
 function getAuthHeaders(): HeadersInit {

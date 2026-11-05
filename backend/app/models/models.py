@@ -7,6 +7,9 @@ from app.core.database import Base
 def generate_uuid() -> str:
     return str(uuid.uuid4())
 
+def utcnow() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc)
+
 class User(Base):
     __tablename__ = "users"
 
@@ -18,7 +21,7 @@ class User(Base):
     preferred_language = Column(String(50), default="English")   # English, Hindi, Hinglish
     target_exam_year = Column(Integer, default=2026)
     preparation_level = Column(String(50), default="Beginner")   # Beginner, Intermediate, Advanced
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     conversations = relationship("Conversation", back_populates="user", cascade="all, delete-orphan")
@@ -30,8 +33,8 @@ class Conversation(Base):
     id = Column(String(36), primary_key=True, default=generate_uuid)
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String(200), default="New UPSC Conversation")
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
 
     # Relationships
     user = relationship("User", back_populates="conversations")
@@ -46,7 +49,7 @@ class Message(Base):
     content = Column(Text, nullable=False)
     citations = Column(JSON, default=list)      # [{ "document_title": ..., "page_number": ..., "snippet": ... }]
     feedback = Column(String(10), nullable=True) # "up", "down", or null
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     conversation = relationship("Conversation", back_populates="messages")
@@ -58,10 +61,10 @@ class StudyPlan(Base):
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String(200), default="Customized UPSC Study Plan")
     plan_data = Column(JSON, nullable=False)    # Detailed daily & weekly schedule, subjects, targets
-    start_date = Column(DateTime, default=datetime.datetime.utcnow)
+    start_date = Column(DateTime, default=utcnow)
     target_date = Column(DateTime, nullable=True)
     progress_status = Column(String(50), default="In Progress")  # "Not Started", "In Progress", "Completed"
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     user = relationship("User", back_populates="study_plans")
@@ -78,7 +81,7 @@ class Course(Base):
     batch_schedule = Column(String(150), nullable=False) # e.g., "Morning: 8:00 AM - 11:30 AM"
     faculty = Column(String(200), default="Eminent Civil Servants & Senior Faculty")
     active_status = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     enquiries = relationship("AdmissionEnquiry", back_populates="course")
@@ -92,7 +95,7 @@ class KnowledgeDocument(Base):
     storage_path = Column(String(500), nullable=False)
     processing_status = Column(String(30), default="PENDING")  # "PENDING", "PROCESSING", "COMPLETED", "FAILED"
     chunk_count = Column(Integer, default=0)
-    uploaded_at = Column(DateTime, default=datetime.datetime.utcnow)
+    uploaded_at = Column(DateTime, default=utcnow)
 
     # Relationships
     chunks = relationship("DocumentChunk", back_populates="document", cascade="all, delete-orphan")
@@ -121,7 +124,7 @@ class AdmissionEnquiry(Base):
     message = Column(Text, nullable=True)
     consent_given = Column(Boolean, default=False, nullable=False)
     status = Column(String(30), default="NEW")  # "NEW", "CONTACTED", "COUNSELED", "ENROLLED"
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     course = relationship("Course", back_populates="enquiries")
@@ -134,4 +137,4 @@ class AnalyticsEvent(Base):
     latency_ms = Column(Float, default=0.0)
     status_code = Column(Integer, default=200)
     error_message = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)

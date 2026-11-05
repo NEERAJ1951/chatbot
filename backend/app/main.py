@@ -18,12 +18,15 @@ from app.api.admin import router as admin_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: create tables and seed initial data
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
     try:
-        seed_initial_data(db)
-    finally:
-        db.close()
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            seed_initial_data(db)
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[Startup Database Note]: {e}", flush=True)
     yield
     # Shutdown logic if needed
 
@@ -35,9 +38,14 @@ app = FastAPI(
 )
 
 # CORS configuration
+# Exclude wildcard '*' when allow_credentials=True to adhere to browser standards,
+# and use allow_origin_regex to automatically permit all *.vercel.app frontend deployments
+cors_origins = [o for o in settings.CORS_ORIGINS if o != "*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=cors_origins if cors_origins else ["*"],
+    allow_origin_regex=r"^https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,6 +71,7 @@ def root():
     }
 
 @app.get("/api/health")
+@app.get("/health")
 def health_check():
     has_openrouter = bool(settings.OPENROUTER_API_KEY and settings.OPENROUTER_API_KEY != "your_openrouter_api_key_here")
     has_gemini = bool(settings.GEMINI_API_KEY and settings.GEMINI_API_KEY != "your_gemini_api_key_here")

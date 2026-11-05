@@ -2,7 +2,10 @@ import os
 import re
 import math
 from typing import List, Dict, Any, Tuple, Optional
-import fitz  # PyMuPDF
+try:
+    import pymupdf as fitz
+except ImportError:
+    import fitz
 from app.core.config import settings
 
 def sanitize_text(text: str) -> str:

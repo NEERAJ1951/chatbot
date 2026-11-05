@@ -113,7 +113,7 @@ def generate_openrouter_stream(
     endpoint = f"{settings.OPENROUTER_BASE_URL.rstrip('/')}/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "http://localhost:5173",
+        "HTTP-Referer": settings.SITE_URL,
         "X-Title": "UPSC Mentor AI",
         "Content-Type": "application/json"
     }
@@ -304,7 +304,7 @@ def query_openrouter_json(prompt: str) -> Optional[str]:
     endpoint = f"{settings.OPENROUTER_BASE_URL.rstrip('/')}/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "http://localhost:5173",
+        "HTTP-Referer": settings.SITE_URL,
         "X-Title": "UPSC Mentor AI",
         "Content-Type": "application/json"
     }
